@@ -27,14 +27,14 @@
 * [语法](#syntax)
 * [命名](#naming)
 * [集合](#collections)
-* [可变量](#mutation)
+* [可变](#mutation)
 * [字符串](#strings)
 * [异常](#exceptions)
 * [宏](#macros)
-* [正则表达式]
 * [注释](#comments)
   + [注释中的标识](#comment-annotations)
-* [惯用法](#tooling)
+* [惯用法](#existential)
+* [工具](#tooling)
 
 ## <a name="source-code-layout--organization"></a>源代码的布局和组织结构
 
@@ -485,7 +485,7 @@
 <sup>[[链接](#forward-references)]</sup>
 
 
-## 语法
+## <a name="syntax"></a>语法
 
 * <a name="ns-fns-only-in-repl"></a>
   避免使用操作命名空间的函数，像是：`require` 与 `refer`。他们在 REPL 之外完全用不到。
@@ -1086,7 +1086,7 @@
 
 
 
-## 命名
+## <a name="naming"></a>命名
 
 > 编程中真正的难点只有两个：验证缓存的有效性；命名。
 > -- Phil Karlton
@@ -1211,7 +1211,7 @@
         * `binding` - 一个向量，包含宏的绑定  
 
 
-## 集合
+## <a name="collections">集合
 
 > 用100种函数去操作同一种数据结构，要好过用10种函数操作10种数据结构。<br/>
 > -- Alan J. Perlis
@@ -1301,7 +1301,7 @@
 <sup>[[链接](#avoid-java-arrays)]</sup>
 
     
-## 可变量
+## <a name="mutation"></a>可变
 
 ### 引用（Refs）
 
@@ -1365,7 +1365,7 @@ as small as possible.
     ```
     
     
-## 字符串
+## <a name="strings"></a>字符串
 
 * <a name="prefer-clojure-string-over-interop"></a>
   优先使用 `clojure.string` 中提供的字符串操作函数，而不是Java中提供的或是自己编写的函数。
@@ -1379,7 +1379,7 @@ as small as possible.
     (.toUpperCase "bruce")
     ```
 
-## 异常
+## <a name="exceptions"></a>异常
 
 * <a name="reuse-existing-exception-types"></a>
   复用已有的异常类型，符合语言习惯的 Clojure 代码，当真的抛出异常时，会抛出标准类型的异常
@@ -1393,7 +1393,7 @@ as small as possible.
 <sup>[[链接](#prefer-with-open-over-finally)]</sup>
 
 
-## 宏
+## <a name="macros"></a>宏
 
 * <a name="dont-write-macro-if-fn-will-do"></a>
   如果可以用函数实现相同功能，不要编写一个宏。
@@ -1416,7 +1416,7 @@ as small as possible.
 <sup>[[链接](#syntax-quoted-forms)]</sup>
 
 
-## Comments
+## <a name="comments"></a>注释
 
 > 好的代码本身就是文档。因此在添加注释之前，先想想自己该如何改进代码，让它更容易理解。做到这一点后，再通过注释让代码更清晰。<br/>
 > -- Steve McConnell
@@ -1501,7 +1501,7 @@ at all.
   避免使用注释去描述一段写得很糟糕的代码。重构它，让它更为可读。（做或者不做，没有尝试这一说。--Yoda）
 <sup>[[链接](#refactor-dont-comment)]</sup>
 
-### 注释中的标识
+### <a name="comment-annotations"></a>注释中的标识
 
 * <a name="annotate-above"></a>
   标识应该写在对应代码的上一行。
@@ -1562,7 +1562,7 @@ at all.
 <sup>[[链接](#document-annotations)]</sup>
 
     
-## 惯用法
+## <a name="existential"></a>惯用法
 
 * <a name="be-functional"></a>
   使用函数式风格进行编程，避免改变变量的值。
@@ -1577,7 +1577,7 @@ at all.
 <sup>[[链接](#common-sense)]</sup> 
     
     
- ## 工具
+ ## <a name="tooling"></a>工具
 
 这里有一些由Clojure的社区创建的工具，可能会帮助你
 在你努力写出地道的Clojure代码。
@@ -1606,21 +1606,9 @@ contributions via [gittip](https://www.gittip.com/bbatsov).
 这项工作是根据
 [知识共享署名3.0 本地化许可协议 ](http://creativecommons.org/licenses/by/3.0/deed.en_US)许可。
 
-# 口耳相传
+# 宣传
 
-一份社群策动的风格指南，对一个社群来说，只是让人知道有这个社群。微博转发这份指南，分享给你的朋友或同事。我们得到的每个注解、建议或意见都可以让这份指南变得更好一点。而我们想要拥有的是最好的指南，不是吗？
+一份由社区驱动的代码规范如果得不到社区本身的支持和认同，那它就毫无意义了。微博转发这份指南，分享给你的朋友或同事。我们得到的每个注解、建议或意见都可以让这份指南变得更好一点。而我们想要拥有的是最好的指南，不是吗？
 
 Cheers,<br/>
 [Bozhidar](https://twitter.com/bbatsov)
-    
-
-
-
-
-
-
-# 宣传
-
-一份由社区驱动的代码规范如果得不到社区本身的支持和认同，那它就毫无意义了。发送一条推特，向朋友和同事介绍此文。任何评论、建议、以及意见都能够让我们向前迈进一小步。请让我们共同努力吧！
-
-
