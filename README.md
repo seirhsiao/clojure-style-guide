@@ -1,79 +1,59 @@
-# The Clojure Style Guide
+
+# Clojure 代码规范
 
 > Role models are important. <br/>
 > -- Officer Alex J. Murphy / RoboCop
 
-This Clojure style guide recommends best practices so that real-world Clojure
-programmers can write code that can be maintained by other real-world Clojure
-programmers. A style guide that reflects real-world usage gets used, and a
-style guide that holds to an ideal that has been rejected by the people it is
-supposed to help risks not getting used at all &mdash; no matter how good it is.
+原文地址：https://github.com/bbatsov/clojure-style-guide
 
-The guide is separated into several sections of related rules. I've
-tried to add the rationale behind the rules (if it's omitted, I've
-assumed that it's pretty obvious).
+这份Clojure代码规范旨在提供一系列的最佳实践，让现实工作中的Clojure程序员能够写出易于维护的代码，并能与他人协作和共享。一份反应真实需求的代码规范才能被人接收，而那些理想化的、甚至部分观点遭到程序员拒绝的代码规范注定不会长久——无论它有多出色。
 
-I didn't come up with all the rules out of nowhere; they are mostly
-based on my extensive career as a professional software engineer,
-feedback and suggestions from members of the Clojure community, and
-various highly regarded Clojure programming resources, such as
-["Clojure Programming"](http://www.clojurebook.com/)
-and ["The Joy of Clojure"](http://joyofclojure.com/).
+这份规范由多个章节组成，每个章节包含一组相关的规则。我会尝试去描述每条规则背后的理念（过于明显的理念我就省略了）。
 
-The guide is still a work in progress; some sections are missing,
-others are incomplete, some rules are lacking examples, some rules
-don't have examples that illustrate them clearly enough. In due time
-these issues will be addressed &mdash; just keep them in mind for now.
+这些规则并不是我凭空想象的，它们出自于我作为一个专业软件开发工程师长久以来的工作积累，以及Clojure社区成员们的反馈和建议，还有各种广为流传的Clojure编程学习资源，如《Clojure Programming》、《The Joy of Clojure》等。
 
-Please note, that the Clojure developing community maintains a list of
-[coding standards for libraries](http://dev.clojure.org/display/community/Library+Coding+Standards),
-too.
+这份规范还处于编写阶段，部分章节有所缺失，内容并不完整；部分规则没有示例，或者示例还不能完全将其描述清楚。未来这些问题都会得到改进，只是请你了解这一情况。
 
-You can generate a PDF or an HTML copy of this guide using
-[Transmuter](https://github.com/TechnoGate/transmuter).
+你可以使用[Transmuter](https://github.com/TechnoGate/transmuter)生成一份本规范的PDF或HTML格式的文档。
 
-Translations of the guide are available in the following languages:
+本指南的翻译可在以下几种语言中：
 
 * [Japanese](https://github.com/totakke/clojure-style-guide/blob/ja/README.md)
 * [Korean](https://github.com/kwakbab/clojure-style-guide/blob/master/README-koKO.md)
 
-## Table of Contents
+## 目录
 
-* [Source Code Layout & Organization](#source-code-layout--organization)
-* [Syntax](#syntax)
-* [Naming](#naming)
-* [Collections](#collections)
-* [Mutation](#mutation)
-* [Strings](#strings)
-* [Exceptions](#exceptions)
-* [Macros](#macros)
-* [Comments](#comments)
-    * [Comment Annotations](#comment-annotations)
-* [Existential](#existential)
-* [Tooling](#tooling)
+* [源代码的布局和组织结构](#source-code-layout--organization)　
+* [语法](#syntax)
+* [命名](#naming)
+* [集合](#collections)
+* [可变量](#mutation)
+* [字符串](#strings)
+* [异常](#exceptions)
+* [宏](#macros)
+* [正则表达式]
+* [注释](#comments)
+  + [注释中的标识](#comment-annotations)
+* [惯用法](#tooling)
 
-## Source Code Layout & Organization
+## <a name="source-code-layout--organization"></a>源代码的布局和组织结构
 
-> Nearly everybody is convinced that every style but their own is
-> ugly and unreadable. Leave out the "but their own" and they're
-> probably right... <br/>
-> -- Jerry Coffin (on indentation)
+> 几乎所有人都认为任何代码风格都是丑陋且难以阅读的，除了自己的之外。
+> 把这句话中的“除了自己之外”去掉，那差不多就能成立了。 <br/>
+> —— Jerry Coffin 关于代码缩进的评论
 
-* <a name="spaces"></a>
-  Use **spaces** for indentation. No hard tabs.
-<sup>[[link](#spaces)]</sup>
+* <a name="spaces"></a> 使用两个**空格**进行缩进，不使用制表符。
+<sup>[[链接](#spaces)]</sup>
 
-* <a name="body-indentation"></a>
-Use 2 spaces to indent the bodies of
-forms that have body parameters.  This covers all `def` forms, special
-forms and macros that introduce local bindings (e.g. `loop`, `let`,
-`when-let`) and many macros like `when`, `cond`, `as->`, `cond->`, `case`,
-`with-*`, etc.
-<sup>[[link](#body-indentation)]</sup>
-
+* <a name="body-indentation"></a>使用2个空格来缩进含参数部分的形式，
+。这些形式包括所有的 `def` 形式 ，特实形式和宏，
+ 以及本地绑定形式 (例如： `loop`, `let`,
+`when-let`) 和许多像 `when`, `cond`, `as->`, `cond->`, `case`,
+`with-*`等的宏。
+<sup>[[链接](#body-indentation)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (when something
       (something-else))
 
@@ -81,37 +61,37 @@ forms and macros that introduce local bindings (e.g. `loop`, `let`,
       (println "Hello, ")
       (println "world!"))
 
-    ;; bad - four spaces
+    ;; 糟糕 - 四个空格
     (when something
         (something-else))
 
-    ;; bad - one space
+    ;; 糟糕 - 一个空格
     (with-out-str
      (println "Hello, ")
      (println "world!"))
     ```
 
 * <a name="vertically-align-fn-args"></a>
-  Vertically align function (macro) arguments spanning multiple lines.
-<sup>[[link](#vertically-align-fn-args)]</sup>
+  垂直排列函数参数。
+<sup>[[链接](#vertically-align-fn-args)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (filter even?
             (range 1 10))
 
-    ;; bad
+    ;; 糟糕
     (filter even?
       (range 1 10))
     ```
 
 * <a name="one-space-indent"></a>
-Use a single space indentation for function (macro) arguments
-when there are no arguments on the same line as the function name.
-<sup>[[link](#one-space-indent)]</sup>
+使用一个空格缩进函数（宏）参数
+当函数没有参数独占一行。
+<sup>[[链接](#one-space-indent)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (filter
      even?
      (range 1 10))
@@ -121,7 +101,7 @@ when there are no arguments on the same line as the function name.
      bala
      portokala)
 
-    ;; bad - two-space indent
+    ;; 糟糕 - 两个空格缩进
     (filter
       even?
       (range 1 10))
@@ -133,17 +113,16 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="vertically-align-let-and-map"></a>
-  Vertically align `let` bindings and map keywords.
-<sup>[[link](#vertically-align-let-and-map)]</sup>
-
+  对齐let绑定，以及map类型中的关键字。
+<sup>[[链接](#vertically-align-let-and-map)]</sup>
     ```Clojure
-    ;; good
+    ;; 很好
     (let [thing1 "some stuff"
           thing2 "other stuff"]
       {:thing1 thing1
        :thing2 thing2})
 
-    ;; bad
+    ;; 糟糕
     (let [thing1 "some stuff"
       thing2 "other stuff"]
       {:thing1 thing1
@@ -151,40 +130,37 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="optional-new-line-after-fn-name"></a>
-  Optionally omit the new line between the function name and argument
-  vector for `defn` when there is no docstring.
-<sup>[[link](#optional-new-line-after-fn-name)]</sup>
-
+  针对没有文档字串的 defn，选择性忽略函数名与参数向量之间的新行。
+<sup>[[链接](#optional-new-line-after-fn-name)]</sup>
+    
     ```Clojure
-    ;; good
+    ;; 很好
     (defn foo
       [x]
       (bar x))
 
-    ;; good
+    ;; 很好
     (defn foo [x]
       (bar x))
 
-    ;; bad
+    ;; 糟糕
     (defn foo
       [x] (bar x))
     ```
 
 * <a name="multimethod-dispatch-val-placement"></a>
-  Place the `dispatch-val` of a multimethod on the same line as the
-  function name.
-<sup>[[link](#multimethod-dispatch-val-placement)]</sup>
-
+  将一个多重方法的`dispatch-val` 与函数名放置在同一行。
+<sup>[[链接](#multimethod-dispatch-val-placement)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defmethod foo :bar [x] (baz x))
 
     (defmethod foo :bar
       [x]
       (baz x))
 
-    ;; bad
+    ;; 糟糕
     (defmethod foo
       :bar
       [x]
@@ -196,40 +172,38 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="docstring-after-fn-name"></a>
-  When adding a docstring – especially to a function using the above form – take
-  care to correctly place the docstring after the function name, not after the
-  argument vector.  The latter is not invalid syntax and won’t cause an error,
-  but includes the string as a form in the function body without attaching it to
-  the var as documentation.
-<sup>[[link](#docstring-after-fn-name)]</sup>
+  当为采用上述形式的函数添加字符串文档 - 
+  注意正确应放置到函数名后面，而不是参数列表
+  后面。后者虽然不是无效语法，不会造成错误，
+  但是这仅仅只是将字符串作为函数体的一种形式，而不将其链接为
+  该变量的文档。
+<sup>[[链接](#docstring-after-fn-name)]</sup>
 
-    ```Clojure
-    ;; good
+  ```Clojure
+    ;; 好
     (defn foo
       "docstring"
       [x]
       (bar x))
 
-    ;; bad
+    ;; 差
     (defn foo [x]
       "docstring"
       (bar x))
-    ```
+  ```
 
 * <a name="oneline-short-fn"></a>
-  Optionally omit the new line between the argument vector and a short
-  function body.
-<sup>[[link](#oneline-short-fn)]</sup>
-
+  选择性忽略短的参数向量与函数体之间的新行。
+<sup>[[链接](#oneline-short-fn)]</sup>
     ```Clojure
-    ;; good
+    ;; 很好
     (defn foo [x]
       (bar x))
 
-    ;; good for a small function body
+    ;; 适合简单的函数
     (defn foo [x] (bar x))
 
-    ;; good for multi-arity functions
+    ;;适合包含多元参数列表的函数
     (defn foo
       ([x] (bar x))
       ([x y]
@@ -237,7 +211,7 @@ when there are no arguments on the same line as the function name.
          (bar x)
          (baz x))))
 
-    ;; bad
+    ;; 糟糕
     (defn foo
       [x] (if (predicate? x)
             (bar x)
@@ -245,11 +219,11 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="multiple-arity-indentation"></a>
-  Indent each arity form of a function definition vertically aligned with its
-  parameters.<sup>[[link](#multiple-arity-indentation)]</sup>
+  多元函数定义，各元数形式垂直对齐参数。
+  <sup>[[链接](#multiple-arity-indentation)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn foo
       "I have two arities."
       ([x]
@@ -257,7 +231,7 @@ when there are no arguments on the same line as the function name.
       ([x y]
        (+ x y)))
 
-    ;; bad - extra indentation
+    ;; 糟糕 - 多出的缩进
     (defn foo
       "I have two arities."
       ([x]
@@ -266,15 +240,15 @@ when there are no arguments on the same line as the function name.
         (+ x y)))
     ```
 
-* <a name="multiple-arity-order"></a> Sort the arities of a function
-  from fewest to most arguments. The common case of multi-arity
-  functions is that some K arguments fully specifies the function's
-  behavior, and that arities N < K partially apply the K arity, and
-  arities N > K provide a fold of the K arity over varargs.
-  <sup>[[link](#multiple-arity-order)]</sup>
+* <a name="multiple-arity-order"></a> 
+  按照从少到多的参数，排序函数的多元数形式。多元素的情况下，共同
+  功能是某个k参数完全指定函数的
+  行为，并且元素个数 Ñ < K 部分地应用在K元数，和
+  元素 N> K提供在K元数超过可变参数的实现。
+  <sup>[[链接](#multiple-arity-order)]</sup>
 
     ```Clojure
-    ;; good - it's easy to scan for the nth arity
+    ;; 很好 - 很容易扫描第n个参数形式
     (defn foo
       "I have two arities."
       ([x]
@@ -282,7 +256,7 @@ when there are no arguments on the same line as the function name.
       ([x y]
        (+ x y)))
 
-    ;; okay - the other arities are applications of the two-arity
+    ;; 还好 - 其他元素应用两倍元数形式
     (defn foo
       "I have two arities."
       ([x y]
@@ -292,7 +266,7 @@ when there are no arguments on the same line as the function name.
       ([x y z & more]
        (reduce foo (foo x (foo y z)) more)))
 
-    ;; bad - unordered for no apparent reason
+    ;; 糟糕 - 无序的，毫无理由这样
     (defn foo
       ([x] 1)
       ([x y z] (foo x (foo y z)))
@@ -301,18 +275,18 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="align-docstring-lines"></a>
-  Indent each line of multi-line docstrings.
-<sup>[[link](#align-docstring-lines)]</sup>
+  缩进多行的文档字串。
+<sup>[[链接](#align-docstring-lines)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn foo
       "Hello there. This is
       a multi-line docstring."
       []
       (bar))
 
-    ;; bad
+    ;; 糟糕
     (defn foo
       "Hello there. This is
     a multi-line docstring."
@@ -321,103 +295,97 @@ when there are no arguments on the same line as the function name.
     ```
 
 * <a name="crlf"></a>
-  Use Unix-style line endings. (*BSD/Solaris/Linux/OSX users are
-  covered by default, Windows users have to be extra careful.)
-<sup>[[link](#crlf)]</sup>
+   使用Unix风格的换行符（*BSD、Solaris、Linux、OSX用户无需设置，Windows用户则需要格外注意了） 
+<sup>[[链接](#crlf)]</sup>
 
-    * If you're using Git you might want to add the following
-    configuration setting to protect your project from Windows line
-    endings creeping in:
-
+    * 如果你使用 Git ，你也许会想加入下面这个配置，来保护你的项目被 Windows 的行编码侵入：
     ```
     bash$ git config --global core.autocrlf true
     ```
 
+
 * <a name="bracket-spacing"></a>
-  If any text precedes an opening bracket(`(`, `{` and
-`[`) or follows a closing bracket(`)`, `}` and `]`), separate that
-text from that bracket with a space. Conversely, leave no space after
-an opening bracket and before following text, or after preceding text
-and before a closing bracket.
-<sup>[[link](#bracket-spacing)]</sup>
+若有任何文字在左括号、中括号、大括号前（`(`, `[`, `{`），或是在右括号、中括号、大括号之后（`)`, `]`, `}`），将文字与括号用一个空格分开。反过来说，在左括号后、右括号前不要有空格。
+<sup>[[链接](#bracket-spacing)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (foo (bar baz) quux)
 
-    ;; bad
+    ;; 糟糕
     (foo(bar baz)quux)
     (foo ( bar baz ) quux)
     ```
 
 > Syntactic sugar causes semicolon cancer. <br/>
 > -- Alan Perlis
-
+    
 * <a name="no-commas-for-seq-literals"></a>
-  Don't use commas between the elements of sequential collection literals.
-<sup>[[link](#no-commas-for-seq-literals)]</sup>
+  不要在序列化的集合类型的字面常量语法里使用逗号。
+<sup>[[链接](#no-commas-for-seq-literals)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     [1 2 3]
     (1 2 3)
 
-    ;; bad
+    ;; 糟糕
     [1, 2, 3]
     (1, 2, 3)
     ```
 
 * <a name="opt-commas-in-map-literals"></a>
-  Consider enhancing the readability of map literals via judicious use
-of commas and line breaks.
-<sup>[[link](#opt-commas-in-map-literals)]</sup>
+ 明智的使用逗号与换行来加强 map 的可读性。
+<sup>[[链接](#opt-commas-in-map-literals)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     {:name "Bruce Wayne" :alter-ego "Batman"}
 
-    ;; good and arguably a bit more readable
+    ;; 很好， 且会增强可读性
     {:name "Bruce Wayne"
      :alter-ego "Batman"}
 
-    ;; good and arguably more compact
+    ;; 很好， 且较为紧凑
     {:name "Bruce Wayne", :alter-ego "Batman"}
     ```
 
 * <a name="gather-trailing-parens"></a>
-  Place all trailing parentheses on a single line instead of distinct lines.
-<sup>[[link](#gather-trailing-parens)]</sup>
+  将所有尾括号放在同一行。
+<sup>[[链接](#gather-trailing-parens)]</sup>
 
     ```Clojure
-    ;; good; single line
+    ;; 很好; 同一行
     (when something
       (something-else))
 
-    ;; bad; distinct lines
+    ;; 糟糕; 不同行
     (when something
       (something-else)
     )
     ```
 
+
+    
 * <a name="empty-lines-between-top-level-forms"></a>
-  Use empty lines between top-level forms.
-<sup>[[link](#empty-lines-between-top-level-forms)]</sup>
+ 顶层形式用空行间隔开来。
+<sup>[[链接](#empty-lines-between-top-level-forms)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (def x ...)
 
     (defn foo ...)
 
-    ;; bad
+    ;; 糟糕
     (def x ...)
     (defn foo ...)
     ```
 
-    An exception to the rule is the grouping of related `def`s together.
+    一个例外是相关`def`分组在一起。
 
     ```Clojure
-    ;; good
+    ;; 很好
     (def min-rows 10)
     (def max-rows 20)
     (def min-cols 15)
@@ -425,27 +393,28 @@ of commas and line breaks.
     ```
 
 * <a name="no-blank-lines-within-def-forms"></a>
-  Do not place blank lines in the middle of a function or
-macro definition.  An exception can be made to indicate grouping of
-pairwise constructs as found in e.g. `let` and `cond`.
-<sup>[[link](#no-blank-lines-within-def-forms)]</sup>
+  函数或宏定义中间不要放空行。一个例外，可制成以指示分组
+比如发现成对结构` let`和` cond`。
+<sup>[[链接](#no-blank-lines-within-def-forms)]</sup>
 
+ * <a name="no-blank-lines-within-def-forms"></a>
+  
 * <a name="80-character-limits"></a>
-  Where feasible, avoid making lines longer than 80 characters.
-<sup>[[link](#80-character-limits)]</sup>
+  可行的场合下，避免每行超过 80 字符。
+<sup>[[链接](#80-character-limits)]</sup>
 
 * <a name="no-trailing-whitespace"></a>
-  Avoid trailing whitespace.
-<sup>[[link](#no-trailing-whitespace)]</sup>
+  避免尾随的空白。
+<sup>[[链接](#no-trailing-whitespace)]</sup>
 
 * <a name="one-file-per-namespace"></a>
-  Use one file per namespace.
-<sup>[[link](#one-file-per-namespace)]</sup>
+  一个文件、一个命名空间。
+<sup>[[链接](#one-file-per-namespace)]</sup>
+
 
 * <a name="comprehensive-ns-declaration"></a>
-  Start every namespace with a comprehensive `ns` form, comprised of
-  `refer`s, `require`s, and `import`s, conventionally in that order.
-<sup>[[link](#comprehensive-ns-declaration)]</sup>
+ 每个命名空间用 `ns` 形式开始，加上 `refer`、`require`、`use` 以及 `import`。
+<sup>[[链接](#comprehensive-ns-declaration)]</sup>
 
     ```Clojure
     (ns examples.ns
@@ -456,91 +425,91 @@ pairwise constructs as found in e.g. `let` and `cond`.
       (:import java.util.Date
                java.text.SimpleDateFormat
                [java.util.concurrent Executors
-                                     LinkedBlockingQueue]))
+                                     链接edBlockingQueue]))
     ```
 
 * <a name="prefer-require-over-use"></a>
-  In the `ns` form prefer `:require :as` over `:require :refer` over `:require
-  :refer :all`.  Prefer `:require` over `:use`; the latter form should be
-  considered deprecated for new code.
-<sup>[[link](#prefer-require-over-use)]</sup>
+  在 `ns` 宏中优先使用 `:require :as` 胜于 `:require :refer` 胜于 `:require
+  :refer :all`. 优先使用 `:require` 胜于 `:use`; 后者的形式应该是
+考虑使用新的代码。
+<sup>[[链接](#prefer-require-over-use)]</sup>
+
 
     ```Clojure
-    ;; good
+    ;; 很好
     (ns examples.ns
       (:require [clojure.zip :as zip]))
 
-    ;; good
+    ;; 很好
     (ns examples.ns
       (:require [clojure.zip :refer [lefts rights]))
 
-    ;; acceptable as warranted
+    ;; 可以接受的
     (ns examples.ns
       (:require [clojure.zip :refer :all]))
 
-    ;; bad
+    ;; 糟糕
     (ns examples.ns
       (:use clojure.zip))
     ```
 
 * <a name="no-single-segment-namespaces"></a>
-  Avoid single-segment namespaces.
-<sup>[[link](#no-single-segment-namespaces)]</sup>
+  避免单段的命名空间。
+  <sup>[[链接](#no-single-segment-namespaces)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (ns example.ns)
 
-    ;; bad
+    ;; 糟糕
     (ns example)
     ```
 
+  
+
 * <a name="namespaces-with-5-segments-max"></a>
-  Avoid the use of overly long namespaces (i.e., more than 5 segments).
-<sup>[[link](#namespaces-with-5-segments-max)]</sup>
+  避免使用过长的命名空间（不超过五段）。
+<sup>[[链接](#namespaces-with-5-segments-max)]</sup>
 
 * <a name="10-loc-per-fn-limit"></a>
-  Avoid functions longer than 10 LOC (lines of code). Ideally, most
-  functions will be shorter than 5 LOC.
-<sup>[[link](#10-loc-per-fn-limit)]</sup>
+  函数避免超过 10 行代码。事实上，大多数函数应保持在5行代码以内。
+<sup>[[链接](#10-loc-per-fn-limit)]</sup>
 
 * <a name="4-positional-fn-params-limit"></a>
-  Avoid parameter lists with more than three or four positional parameters.
-<sup>[[link](#4-positional-fn-params-limit)]</sup>
+  参数列表避免超过 3 个或 4 个位置参数。
+<sup>[[链接](#4-positional-fn-params-limit)]</sup>
 
 * <a name="forward-references"></a>
-  Avoid forward references.  They are occasionally necessary, but such occasions
-  are rare in practice.
-<sup>[[link](#forward-references)]</sup>
+  避免向前引用。它们偶尔必要的，但这样的场合
+  实际上很罕见。
+<sup>[[链接](#forward-references)]</sup>
 
-## Syntax
+
+## 语法
 
 * <a name="ns-fns-only-in-repl"></a>
-  Avoid the use of namespace-manipulating functions like `require` and
-  `refer`. They are entirely unnecessary outside of a REPL
-  environment.
-<sup>[[link](#ns-fns-only-in-repl)]</sup>
+  避免使用操作命名空间的函数，像是：`require` 与 `refer`。他们在 REPL 之外完全用不到。
+<sup>[[链接](#ns-fns-only-in-repl)]</sup>
 
 * <a name="declare"></a>
-  Use `declare` to enable forward references when forward references are
-  necessary.
-<sup>[[link](#declare)]</sup>
+  使用declare实现向前引用。
+<sup>[[链接](#declare)]</sup>
 
 * <a name="higher-order-fns"></a>
-  Prefer higher-order functions like `map` to `loop/recur`.
-<sup>[[link](#higher-order-fns)]</sup>
+  优先使用`map`这类高阶函数，而非`loop/recur`。
+<sup>[[链接](#higher-order-fns)]</sup>
 
 * <a name="pre-post-conditions"></a>
-  Prefer function pre and post conditions to checks inside a function's body.
-<sup>[[link](#pre-post-conditions)]</sup>
+  优先使用前置、后置条件来检测函数参数和返回值。
+<sup>[[链接](#pre-post-conditions)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn foo [x]
       {:pre [(pos? x)]}
       (bar x))
 
-    ;; bad
+    ;; 糟糕
     (defn foo [x]
       (if (pos? x)
         (bar x)
@@ -548,29 +517,28 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="dont-def-vars-inside-fns"></a>
-  Don't define vars inside functions.
-<sup>[[link](#dont-def-vars-inside-fns)]</sup>
+  不要在函数中定义变量。
+<sup>[[链接](#dont-def-vars-inside-fns)]</sup>
 
     ```Clojure
-    ;; very bad
+    ;; 非常糟糕
     (defn foo []
       (def x 5)
       ...)
     ```
 
 * <a name="dont-shadow-clojure-core"></a>
-  Don't shadow `clojure.core` names with local bindings.
-<sup>[[link](#dont-shadow-clojure-core)]</sup>
+  本地变量名不应覆盖clojure.core中定义的函数。
+<sup>[[链接](#dont-shadow-clojure-core)]</sup>
 
     ```Clojure
-    ;; bad - you're forced to use clojure.core/map fully qualified inside
+    ;; 糟糕 - 这样一来函数中调用`clojure.core/map`时就需要指定完整的命名空间了。
     (defn foo [map]
       ...)
     ```
 
 * <a name="alter-var"></a>
-  Use `alter-var-root` instead of `def` to change the value of a var.
-<sup>[[link]](#alter-var)</sup>
+  使用 `alter-var-root` 替代 `def` 去改变变量的值。
 
     ```Clojure
     ;; good
@@ -586,18 +554,17 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="nil-punning"></a>
-  Use `seq` as a terminating condition to test whether a sequence is
-  empty (this technique is sometimes called *nil punning*).
-<sup>[[link](#nil-punning)]</sup>
+  使用 `seq` 来判断一个序列是否为空（这个技巧有时候称为 *nil punning）。
+<sup>[[链接](#nil-punning)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn print-seq [s]
       (when (seq s)
         (prn (first s))
         (recur (rest s))))
 
-    ;; bad
+    ;; 糟糕
     (defn print-seq [s]
       (when-not (empty? s)
         (prn (first s))
@@ -605,28 +572,28 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="to-vector"></a>
-  Prefer `vec` over `into` when you need to convert a sequence into a vector.
-<sup>[[link](#to-vector)]</sup>
+  需要将序列转换向量，优先使用 `vec` 而不是 `into` 。
+<sup>[[链接](#to-vector)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (vec some-seq)
 
-    ;; bad
+    ;; 糟糕
     (into [] some-seq)
     ```
-
+    
 * <a name="when-instead-of-single-branch-if"></a>
-  Use `when` instead of `(if ... (do ...)`.
-<sup>[[link](#when-instead-of-single-branch-if)]</sup>
+  使用 `when` 替代 `(if ... (do ...)`。
+<sup>[[链接](#when-instead-of-single-branch-if)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (when pred
       (foo)
       (bar))
 
-    ;; bad
+    ;; 糟糕
     (if pred
       (do
         (foo)
@@ -634,16 +601,16 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="if-let"></a>
-  Use `if-let` instead of `let` + `if`.
-<sup>[[link](#if-let)]</sup>
+  使用 `if-let` 替代 `let` + `if`。
+<sup>[[链接](#if-let)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (if-let [result (foo x)]
       (something-with result)
       (something-else))
 
-    ;; bad
+    ;; 糟糕
     (let [result (foo x)]
       (if result
         (something-with result)
@@ -651,16 +618,16 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="when-let"></a>
-  Use `when-let` instead of `let` + `when`.
-<sup>[[link](#when-let)]</sup>
+  使用 `when-let` 替代 `let` + `when`。
+<sup>[[链接](#when-let)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (when-let [result (foo x)]
       (do-something-with result)
       (do-something-more-with result))
 
-    ;; bad
+    ;; 糟糕
     (let [result (foo x)]
       (when result
         (do-something-with result)
@@ -668,46 +635,46 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="if-not"></a>
-  Use `if-not` instead of `(if (not ...) ...)`.
-<sup>[[link](#if-not)]</sup>
+  使用 `if-not` 替代 `(if (not ...) ...)`。
+<sup>[[链接](#if-not)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (if-not pred
       (foo))
 
-    ;; bad
+    ;; 糟糕
     (if (not pred)
       (foo))
     ```
 
 * <a name="when-not"></a>
-  Use `when-not` instead of `(when (not ...) ...)`.
-<sup>[[link](#when-not)]</sup>
+  使用 `when-not` 替代 `(when (not ...) ...)`。
+<sup>[[链接](#when-not)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (when-not pred
       (foo)
       (bar))
 
-    ;; bad
+    ;; 糟糕
     (when (not pred)
       (foo)
       (bar))
     ```
 
 * <a name="when-not-instead-of-single-branch-if-not"></a>
-  Use `when-not` instead of `(if-not ... (do ...)`.
-<sup>[[link](#when-not-instead-of-single-branch-if-not)]</sup>
+  使用 `when-not` 替代 `(if-not ... (do ...)`。
+<sup>[[链接](#when-not-instead-of-single-branch-if-not)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (when-not pred
       (foo)
       (bar))
 
-    ;; bad
+    ;; 糟糕
     (if-not pred
       (do
         (foo)
@@ -715,185 +682,185 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="not-equal"></a>
-  Use `not=` instead of `(not (= ...))`.
-<sup>[[link](#not-equal)]</sup>
+  使用 `not=` 替代 `(not (= ...))`。
+<sup>[[链接](#not-equal)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (not= foo bar)
 
-    ;; bad
+    ;; 糟糕
     (not (= foo bar))
     ```
-
+    
 * <a name="printf"></a>
-  Use `printf` instead of `(print (format ...))`.
-<sup>[[link](#printf)]</sup>
+  使用 `printf` 替代 `(print (format ...))`。
+<sup>[[链接](#printf)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (printf "Hello, %s!\n" name)
 
-    ;; ok
+    ;; 好
     (println (format "Hello, %s!" name))
     ```
 
+
 * <a name="multiple-arity-of-gt-and-ls-fns"></a>
-  When doing comparisons, keep in mind that Clojure's functions `<`,
-  `>`, etc. accept a variable number of arguments.
-<sup>[[link](#multiple-arity-of-gt-and-ls-fns)]</sup>
+  在做比较，请考虑， Clojure的函数`<`
+  `>`等，接受可变数量的参数的函数。
+<sup>[[链接](#multiple-arity-of-gt-and-ls-fns)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (< 5 x 10)
 
-    ;; bad
+    ;; 糟糕
     (and (> x 5) (< x 10))
     ```
 
 * <a name="single-param-fn-literal"></a>
-  Prefer `%` over `%1` in function literals with only one parameter.
-<sup>[[link](#single-param-fn-literal)]</sup>
+  当匿名函数只有一个参数时，优先使用 `%` ，而非 `%1` 。
+<sup>[[链接](#single-param-fn-literal)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     #(Math/round %)
 
-    ;; bad
+    ;; 糟糕
     #(Math/round %1)
     ```
 
 * <a name="multiple-params-fn-literal"></a>
-  Prefer `%1` over `%` in function literals with more than one parameter.
-<sup>[[link](#multiple-params-fn-literal)]</sup>
+  当匿名函数有多个参数时，优先使用 `%1`，而非 `%` 。
+<sup>[[链接](#multiple-params-fn-literal)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     #(Math/pow %1 %2)
 
-    ;; bad
+    ;; 糟糕
     #(Math/pow % %2)
     ```
 
 * <a name="no-useless-anonymous-fns"></a>
-  Don't wrap functions in anonymous functions when you don't need to.
-<sup>[[link](#no-useless-anonymous-fns)]</sup>
+  只有在必要的时候才使用匿名函数。
+<sup>[[链接](#no-useless-anonymous-fns)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (filter even? (range 1 10))
 
-    ;; bad
+    ;; 糟糕
     (filter #(even? %) (range 1 10))
     ```
 
 * <a name="no-multiple-forms-fn-literals"></a>
-  Don't use function literals if the function body will consist of
-  more than one form.
-<sup>[[link](#no-multiple-forms-fn-literals)]</sup>
+  若函数体由一个以上形式组成，不要使用匿名函数。
+<sup>[[链接](#no-multiple-forms-fn-literals)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (fn [x]
       (println x)
       (* x 2))
 
-    ;; bad (you need an explicit do form)
+    ;; 糟糕 (你需要明确得使用到do)
     #(do (println %)
          (* % 2))
     ```
 
 * <a name="complement"></a>
-  Favor the use of `complement` versus the use of an anonymous function.
-<sup>[[link](#complement)]</sup>
+  在特定情况下优先使用`complement`，而非匿名函数。
+<sup>[[链接](#complement)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (filter (complement some-pred?) coll)
 
-    ;; bad
+    ;; 糟糕
     (filter #(not (some-pred? %)) coll)
     ```
 
-    This rule should obviously be ignored if the complementing predicate
-    exists in the form of a separate function (e.g. `even?` and `odd?`).
+    这个规则应该在函数有明确的反函数时忽略（如：even? 与 odd?）。 
 
 * <a name="comp"></a>
-  Leverage `comp` when it would yield simpler code.
-<sup>[[link](#comp)]</sup>
+  某些情况下可以用 `comp` 使代码更简洁。
+<sup>[[链接](#comp)]</sup>
 
     ```Clojure
     ;; Assuming `(:require [clojure.string :as str])`...
 
-    ;; good
+    ;; 很好
     (map #(str/capitalize (str/trim %)) ["top " " test "])
 
-    ;; better
+    ;; 更好
     (map (comp str/capitalize str/trim) ["top " " test "])
     ```
-
+  
 * <a name="partial"></a>
-  Leverage `partial` when it would yield simpler code.
-<sup>[[link](#partial)]</sup>
+  某些情况下可以用 `partial` 使代码更简洁。
+<sup>[[链接](#partial)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (map #(+ 5 %) (range 1 10))
 
-    ;; (arguably) better
+    ;; (或许) 更好
     (map (partial + 5) (range 1 10))
     ```
 
+
 * <a name="threading-macros"></a>
-  Prefer the use of the threading macros `->` (thread-first) and `->>`
-(thread-last) to heavy form nesting.
-<sup>[[link](#threading-macros)]</sup>
+  当遇到嵌套调用时，建议使用 `->` 宏和 `->>` 宏。
+<sup>[[链接](#threading-macros)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (-> [1 2 3]
         reverse
         (conj 4)
         prn)
 
-    ;; not as good
+    ;; 不够好
     (prn (conj (reverse [1 2 3])
                4))
 
-    ;; good
+    ;; 很好
     (->> (range 1 10)
          (filter even?)
          (map (partial * 2)))
 
-    ;; not as good
+    ;; 不够好
     (map (partial * 2)
          (filter even? (range 1 10)))
     ```
-
+    
+    
 * <a name="dot-dot-macro"></a>
-  Prefer `..` to `->` when chaining method calls in Java interop.
-<sup>[[link](#dot-dot-macro)]</sup>
+  当需要连续调用Java类的方法时，优先使用 `..` ，而非 `->` 。
+<sup>[[链接](#dot-dot-macro)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (-> (System/getProperties) (.get "os.name"))
 
-    ;; better
+    ;; 更好
     (.. System getProperties (get "os.name"))
     ```
-
+    
 * <a name="else-keyword-in-cond"></a>
-  Use `:else` as the catch-all test expression in `cond`.
-<sup>[[link](#else-keyword-in-cond)]</sup>
+  在 `cond` 和 `condp` 中，使用 `:else` 来处理不满足条件的情况。
+<sup>[[链接](#else-keyword-in-cond)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (cond
       (< n 0) "negative"
       (> n 0) "positive"
       :else "zero"))
 
-    ;; bad
+    ;; 糟糕
     (cond
       (< n 0) "negative"
       (> n 0) "positive"
@@ -901,19 +868,18 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="condp"></a>
-  Prefer `condp` instead of `cond` when the predicate & expression don't
-  change.
-<sup>[[link](#condp)]</sup>
+  当比较的变量和方式相同时，优先使用 `condp` ，而非 `cond` 。
+<sup>[[链接](#condp)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (cond
       (= x 10) :ten
       (= x 20) :twenty
       (= x 30) :forty
       :else :dunno)
 
-    ;; much better
+    ;; 更好
     (condp = x
       10 :ten
       20 :twenty
@@ -922,46 +888,43 @@ pairwise constructs as found in e.g. `let` and `cond`.
     ```
 
 * <a name="case"></a>
-  Prefer `case` instead of `cond` or `condp` when test expressions are
-compile-time constants.
-<sup>[[link](#case)]</sup>
+  当条件是常量时，优先使用 `case` ，而非 `cond` 或 `condp` 。
+<sup>[[链接](#case)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (cond
       (= x 10) :ten
       (= x 20) :twenty
       (= x 30) :forty
       :else :dunno)
 
-    ;; better
+    ;; 更好
     (condp = x
       10 :ten
       20 :twenty
       30 :forty
       :dunno)
 
-    ;; best
+    ;; 最佳
     (case x
       10 :ten
       20 :twenty
       30 :forty
       :dunno)
     ```
-
 * <a name="shor-forms-in-cond"></a>
-  Use short forms in `cond` and related.  If not possible give visual
-hints for the pairwise grouping with comments or empty lines.
-<sup>[[link](#shor-forms-in-cond)]</sup>
+   如果不能在视觉上使用注释与空行两两分组提示，则在 `cond` 相关的的形式中，使用短形式。
+<sup>[[链接](#shor-forms-in-cond)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (cond
       (test1) (action1)
       (test2) (action2)
       :else   (default-action))
 
-    ;; ok-ish
+    ;; 还行
     (cond
       ;; test case 1
       (test1)
@@ -982,20 +945,20 @@ hints for the pairwise grouping with comments or empty lines.
     ```
 
 * <a name="set-as-predicate"></a>
-  Use a `set` as a predicate when appropriate.
-<sup>[[link](#set-as-predicate)]</sup>
+  某些情况下，使用 `set` 作为判断条件。
+<sup>[[链接](#set-as-predicate)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (remove #{1} [0 1 2 3 4 5])
 
-    ;; bad
+    ;; 糟糕
     (remove #(= % 1) [0 1 2 3 4 5])
 
-    ;; good
+    ;; 很好
     (count (filter #{\a \e \i \o \u} "mary had a little lamb"))
 
-    ;; bad
+    ;; 糟糕
     (count (filter #(or (= % \a)
                         (= % \e)
                         (= % \i)
@@ -1004,93 +967,95 @@ hints for the pairwise grouping with comments or empty lines.
                    "mary had a little lamb"))
     ```
 
+    
 * <a name="inc-and-dec"></a>
-  Use `(inc x)` & `(dec x)` instead of `(+ x 1)` and `(- x 1)`.
-<sup>[[link](#inc-and-dec)]</sup>
+  使用 `(inc x)` 和 `(dec x)` 替代 `(+ x 1)` 和 `(- x 1)`。
+<sup>[[链接](#inc-and-dec)]</sup>
 
 * <a name="pos-and-neg"></a>
-  Use `(pos? x)`, `(neg? x)` & `(zero? x)` instead of `(> x 0)`,
-`(< x 0)` & `(= x 0)`.
-<sup>[[link](#pos-and-neg)]</sup>
+  使用 `(pos? x)`、`(neg? x)` 、以及`(zero? x)` 替代 `(> x 0)` 、`(< x 0)` 、和`(= x 0)`。
+<sup>[[链接](#pos-and-neg)]</sup>
 
 * <a name="list-star-instead-of-nested-cons"></a>
-  Use `list*` instead of a series of nested `cons` invocations.
-<sup>[[link](#list-star-instead-of-nested-cons)]</sup>
+  Useinstead of a series of nestedinvocations.
+  使用 `list*` 替代内部嵌套多个 `cons` 。
+<sup>[[链接](#list-star-instead-of-nested-cons)]</sup>
 
     ```Clojure
-    # good
+    # 很好
     (list* 1 2 3 [4 5])
 
-    # bad
+    # 糟糕
     (cons 1 (cons 2 (cons 3 [4 5])))
 
     ```
 
 * <a name="sugared-java-interop"></a>
-  Use the sugared Java interop forms.
-<sup>[[link](#sugared-java-interop)]</sup>
+  进行Java交互时，优先使用Clojure提供的语法糖。
+<sup>[[链接](#sugared-java-interop)]</sup>
 
     ```Clojure
-    ;;; object creation
-    ;; good
+    ;;; 创建对象
+    ;; 很好
     (java.util.ArrayList. 100)
 
-    ;; bad
+    ;; 糟糕
     (new java.util.ArrayList 100)
 
-    ;;; static method invocation
-    ;; good
+    ;;; 调用静态方法
+    ;; 很好
     (Math/pow 2 10)
 
-    ;; bad
+    ;; 糟糕
     (. Math pow 2 10)
 
-    ;;; instance method invocation
-    ;; good
+    ;;; 调用实例方法
+    ;; 很好
     (.substring "hello" 1 3)
 
-    ;; bad
+    ;; 糟糕
     (. "hello" substring 1 3)
 
-    ;;; static field access
-    ;; good
+    ;;; 访问静态属性
+    ;; 很好
     Integer/MAX_VALUE
 
-    ;; bad
+    ;; 糟糕
     (. Integer MAX_VALUE)
 
-    ;;; instance field access
-    ;; good
+    ;;; 访问实例属性
+    ;; 很好
     (.someField some-object)
 
-    ;; bad
+    ;; 糟糕
     (. some-object someField)
     ```
-
+    
 * <a name="compact-metadata-notation-for-true-flags"></a>
   Use the compact metadata notation for metadata that contains only
-  slots whose keys are keywords and whose value is boolean `true`.
-<sup>[[link](#compact-metadata-notation-for-true-flags)]</sup>
+  slots whose keys are keywords and whose value is boolean .
+  当元数据的键是关键字和值是 `true` ，使用紧凑形式标记元数据。
+<sup>[[链接](#compact-metadata-notation-for-true-flags)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (def ^:private a 5)
 
-    ;; bad
+    ;; 糟糕
     (def ^{:private true} a 5)
     ```
 
 * <a name="private"></a>
-  Denote private parts of your code.
-<sup>[[link](#private)]</sup>
+  指出代码的私有部分。
+<sup>[[链接](#private)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn- private-fun [] ...)
 
     (def ^:private private-var ...)
 
-    ;; bad
+    ;; 糟糕
     (defn private-fun [] ...) ; not private at all
 
     (defn ^:private private-fun [] ...) ; overly verbose
@@ -1099,97 +1064,97 @@ hints for the pairwise grouping with comments or empty lines.
     ```
 
 * <a name="access-private-var"></a>
-  To access a private var (e.g. for testing), use the `@#'some.ns/var` form.
-<sup>[[link](#access-private-var)]</sup>
+  使用 `@#'some.ns/var` 形式，访问私有变量（如：为了测试）。
+<sup>[[链接](#access-private-var)]</sup>
 
 * <a name="attach-metadata-carefully"></a>
   Be careful regarding what exactly do you attach metadata to.
-<sup>[[link](#attach-metadata-carefully)]</sup>
+  小心你添加元数据的对象。
+<sup>[[链接](#attach-metadata-carefully)]</sup>
 
     ```Clojure
-    ;; we attach the metadata to the var referenced by `a`
+    ;; 我们添加元数据到变量 `a`中
     (def ^:private a {})
     (meta a) ;=> nil
     (meta #'a) ;=> {:private true}
 
-    ;; we attach the metadata to the empty hash-map value
+    ;; 我们添加元数据到空的hash-map中
     (def a ^:private {})
     (meta a) ;=> {:private true}
     (meta #'a) ;=> nil
     ```
 
-## Naming
 
-> The only real difficulties in programming are cache invalidation and
-> naming things. <br/>
+
+## 命名
+
+> 编程中真正的难点只有两个：验证缓存的有效性；命名。
 > -- Phil Karlton
 
 * <a name="ns-naming-schemas"></a>
-  When naming namespaces favor the following two schemas:
-<sup>[[link](#ns-naming-schemas)]</sup>
+  命名空间建议使用以下两种方式：
+<sup>[[链接](#ns-naming-schemas)]</sup>
 
-    * `project.module`
-    * `organization.project.module`
+    * `项目名称.模块名称`
+    * `组织名称.项目名称.模块名称`
 
 * <a name="lisp-case-ns"></a>
-  Use `lisp-case` in composite namespace segments(e.g. `bruce.project-euler`)
-<sup>[[link](#lisp-case-ns)]</sup>
+  对于命名空间中较长的元素，使用 `lisp-case` 格式，如（`bruce.project-euler`）。
+<sup>[[链接](#lisp-case-ns)]</sup>
 
 * <a name="lisp-case"></a>
-  Use `lisp-case` for function and variable names.
-<sup>[[link](#lisp-case)]</sup>
+  使用 `lisp-case` 格式来命名函数和变量。
+<sup>[[链接](#lisp-case)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (def some-var ...)
     (defn some-fun ...)
 
-    ;; bad
+    ;; 糟糕
     (def someVar ...)
     (defn somefun ...)
     (def some_fun ...)
     ```
 
 * <a name="CamelCase-for-protocols-records-structs-and-types"></a>
-  Use `CamelCase` for protocols, records, structs, and types. (Keep
-  acronyms like HTTP, RFC, XML uppercase.)
-<sup>[[link](#CamelCase-for-protocols-records-structs-and-types)]</sup>
+  使用 `CamelCase` 来命名接口（protocol）、记录（record）、结构和类型（struct & type）。对于HTTP、RFC、XML等缩写，仍保留其大写格式。
+<sup>[[链接](#CamelCase-for-protocols-records-structs-and-types)]</sup>
 
 * <a name="pred-with-question-mark"></a>
-  The names of predicate methods (methods that return a boolean value)
-  should end in a question mark
-  (e.g., `even?`).
-<sup>[[link](#pred-with-question-mark)]</sup>
+  对于返回布尔值的函数名称，使用问号结尾，（如: even?）。
+<sup>[[链接](#pred-with-question-mark)]</sup>
 
-    ```Clojure
-    ;; good
+   ```Clojure
+    ;; 很好
     (defn palindrome? ...)
 
-    ;; bad
+    ;; 糟糕
     (defn palindrome-p ...) ; Common Lisp style
     (defn is-palindrome ...) ; Java style
-    ```
+   ```
 
 * <a name="changing-state-fns-with-exclamation-mark"></a>
   The names of functions/macros that are not safe in STM transactions
   should end with an exclamation mark (e.g. `reset!`).
-<sup>[[link](#changing-state-fns-with-exclamation-mark)]</sup>
+  当方法或宏不能在STM中安全使用时，须以感叹号结尾，（如：reset!）。
+<sup>[[链接](#changing-state-fns-with-exclamation-mark)]</sup>
 
 * <a name="arrow-instead-of-to"></a>
-  Use `->` instead of `to` in the names of conversion functions.
-<sup>[[link](#arrow-instead-of-to)]</sup>
+  命名类型转换函数时使用 `->` ，而非 `to` 。
+<sup>[[链接](#arrow-instead-of-to)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (defn f->c ...)
 
-    ;; not so good
+    ;; 不够好
     (defn f-to-c ...)
     ```
 
 * <a name="earmuffs-for-dynamic-vars"></a>
-  Use `*earmuffs*` for things intended for rebinding (ie. are dynamic).
-<sup>[[link](#earmuffs-for-dynamic-vars)]</sup>
+  对于可供重绑定的变量（即动态变量），使用星号括起，（如：*earmuffs*）。
+<sup>[[链接](#earmuffs-for-dynamic-vars)]</sup>
 
     ```Clojure
     ;; good
@@ -1200,305 +1165,290 @@ hints for the pairwise grouping with comments or empty lines.
     ```
 
 * <a name="dont-flag-constants"></a>
-  Don't use a special notation for constants; everything is assumed a constant
-  unless specified otherwise.
-<sup>[[link](#dont-flag-constants)]</sup>
+  无需对常量名进行特殊的标识，因为所有的变量都应该是常量，除非有特别说明。
+<sup>[[链接](#dont-flag-constants)]</sup>
 
 * <a name="underscore-for-unused-bindings"></a>
-  Use `_` for destructuring targets and formal arguments names whose
-  value will be ignored by the code at hand.
-<sup>[[link](#underscore-for-unused-bindings)]</sup>
+  对于解构过程中或参数列表中忽略的元素，使用 `_` 来表示。
+<sup>[[链接](#underscore-for-unused-bindings)]</sup>
 
-    ```Clojure
-    ;; good
+  ```Clojure
+    ;; 很好
     (let [[a b _ c] [1 2 3 4]]
       (println a b c))
 
     (dotimes [_ 3]
       (println "Hello!"))
 
-    ;; bad
+    ;; 糟糕
     (let [[a b c d] [1 2 3 4]]
       (println a b d))
 
     (dotimes [i 3]
       (println "Hello!"))
-    ```
-
+  ```
+    
 * <a name="idiomatic-names"></a>
-  Follow `clojure.core`'s example for idiomatic names like `pred` and `coll`.
-<sup>[[link](#idiomatic-names)]</sup>
+  参考 `clojure.core` 中的命名规范，如 `pred` 、`coll` 。
+<sup>[[链接](#idiomatic-names)]</sup>
 
-    * in functions:
-        * `f`, `g`, `h` - function input
-        * `n` - integer input usually a size
-        * `index`, `i` - integer index
-        * `x`, `y` - numbers
-        * `xs` - sequence
-        * `m` - map
-        * `s` - string input
-        * `re` - regular expression
-        * `coll` - a collection
-        * `pred` - a predicate closure
-        * `& more` - variadic input
-        * `xf` - xform, a transducer
-    * in macros:
-        * `expr` - an expression
-        * `body` - a macro body
-        * `binding` - a macro binding vector
+    * 函数：
+        * `f`，`g`，`h` - 参数内容是一个函数
+        * `n` - 整数，通常是一个表示大小的值
+        * `index`, `i` - 整数索引
+        * `x`, `y` - 数值
+        * `xs` - 序列
+        * `m` - 映射
+        * `s` - 字符串
+        * `re` - 正则表达式
+        * `coll` - 集合
+        * `pred` - 谓词闭包
+        * `& more` - 可变参数
+        * `xf` - xform, 一个转换器
+    * 宏：
+        * `expr` - 表达式
+        * `body` - 宏的主体
+        * `binding` - 一个向量，包含宏的绑定  
 
-## Collections
 
-> It is better to have 100 functions operate on one data structure
-> than to have 10 functions operate on 10 data structures. <br/>
+## 集合
+
+> 用100种函数去操作同一种数据结构，要好过用10种函数操作10种数据结构。<br/>
 > -- Alan J. Perlis
 
 * <a name="avoid-lists"></a>
-  Avoid the use of lists for generic data storage (unless a list is
-  exactly what you need).
-<sup>[[link](#avoid-lists)]</sup>
+  避免使用列表（list）来存储数据（除非它真的就是你想要的）。
+<sup>[[链接](#avoid-lists)]</sup>
 
 * <a name="keywords-for-hash-keys"></a>
-  Prefer the use of keywords for hash keys.
-<sup>[[link](#keywords-for-hash-keys)]</sup>
+  优先使用关键字（keyword），而非普通的哈希键。
+<sup>[[链接](#keywords-for-hash-keys)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     {:name "Bruce" :age 30}
 
-    ;; bad
+    ;; 糟糕
     {"name" "Bruce" "age" 30}
     ```
 
 * <a name="literal-col-syntax"></a>
-  Prefer the use of the literal collection syntax where
-  applicable. However, when defining sets, only use literal syntax
-  when the values are compile-time constants.
-<sup>[[link](#literal-col-syntax)]</sup>
+  编写集合时，优先使用字面的语法形式，而非构造函数。但是，在定义唯一值集合（set）时，只有当元素都是常量时才可使用字面语法，否则应使用构造函数。
+<sup>[[链接](#literal-col-syntax)]</sup>
 
-    ```Clojure
-    ;; good
+   ```Clojure
+    ;; 很好
     [1 2 3]
     #{1 2 3}
-    (hash-set (func1) (func2)) ; values determined at runtime
+    (hash-set (func1) (func2)) ; 元素在运行时确定
 
-    ;; bad
+    ;; 糟糕
     (vector 1 2 3)
     (hash-set 1 2 3)
-    #{(func1) (func2)} ; will throw runtime exception if (func1) = (func2)
-    ```
+    #{(func1) (func2)} ; 若(func1)和(func2)的值相等，则会抛出运行时异常。
+   ```
 
 * <a name="avoid-index-based-coll-access"></a>
-  Avoid accessing collection members by index whenever possible.
-<sup>[[link](#avoid-index-based-coll-access)]</sup>
+  避免使用数值索引来访问集合元素。
+<sup>[[链接](#avoid-index-based-coll-access)]</sup>
 
 * <a name="keywords-as-fn-to-get-map-values"></a>
-  Prefer the use of keywords as functions for retrieving values from
-  maps, where applicable.
-<sup>[[link](#keywords-as-fn-to-get-map-values)]</sup>
+  优先使用关键字来获取哈希表（map）中的值。
+<sup>[[链接](#keywords-as-fn-to-get-map-values)]</sup>
 
     ```Clojure
     (def m {:name "Bruce" :age 30})
 
-    ;; good
+    ;; 很好
     (:name m)
 
-    ;; more verbose than necessary
+    ;; 太过啰嗦
     (get m :name)
 
-    ;; bad - susceptible to NullPointerException
+    ;; 糟糕 - 可能抛出空指针异常
     (m :name)
     ```
 
 * <a name="colls-as-fns"></a>
-  Leverage the fact that most collections are functions of their elements.
-<sup>[[link](#colls-as-fns)]</sup>
+  集合可以被用作函数。
+<sup>[[链接](#colls-as-fns)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (filter #{\a \e \o \i \u} "this is a test")
 
-    ;; bad - too ugly to share
+    ;; 糟糕 - 不够美观
     ```
 
 * <a name="keywords-as-fns"></a>
-  Leverage the fact that keywords can be used as functions of a collection.
-<sup>[[link](#keywords-as-fns)]</sup>
+  关键字可以被用作函数。
+<sup>[[链接](#keywords-as-fns)]</sup>
 
     ```Clojure
     ((juxt :a :b) {:a "ala" :b "bala"})
     ```
 
 * <a name="avoid-transient-colls"></a>
-  Avoid the use of transient collections, except for
-performance-critical portions of the code.
-<sup>[[link](#avoid-transient-colls)]</sup>
+只有在非常强调性能的情况下才可使用瞬时集合（transient collection）。
+<sup>[[链接](#avoid-transient-colls)]</sup>
 
 * <a name="avoid-java-colls"></a>
-  Avoid the use of Java collections.
-<sup>[[link](#avoid-java-colls)]</sup>
+  避免使用Java集合。
+<sup>[[链接](#avoid-java-colls)]</sup>
 
 * <a name="avoid-java-arrays"></a>
-  Avoid the use of Java arrays, except for interop scenarios and
-performance-critical code dealing heavily with primitive types.
-<sup>[[link](#avoid-java-arrays)]</sup>
+  避免使用Java数组，除非遇到需要和Java类进行交互，或需要高性能地处理基本类型时才可使用。
+<sup>[[链接](#avoid-java-arrays)]</sup>
 
-## Mutation
+    
+## 可变量
 
-### Refs
+### 引用（Refs）
 
 * <a name="refs-io-macro"></a>
-  Consider wrapping all I/O calls with the `io!` macro to avoid nasty
-surprises if you accidentally end up calling such code in a
-transaction.
-<sup>[[link](#refs-io-macro)]</sup>
+  建议所有的IO操作都使用 `io!` 宏进行包装，以免不小心在事务中调用了这些代码。
+<sup>[[链接](#refs-io-macro)]</sup>
 
 * <a name="refs-avoid-ref-set"></a>
-  Avoid the use of `ref-set` whenever possible.
-<sup>[[link](#refs-avoid-ref-set)]</sup>
+  避免使用 `ref-set` 。
+<sup>[[链接](#refs-avoid-ref-set)]</sup>
 
     ```Clojure
     (def r (ref 0))
 
-    ;; good
+    ;; 很好
     (dosync (alter r + 5))
 
-    ;; bad
+    ;; 糟糕
     (dosync (ref-set r 5))
     ```
-
+    
 * <a name="refs-small-transactions"></a>
-  Try to keep the size of transactions (the amount of work encapsulated in them)
+  控制事务的大小，(即事务所执行的工作越少越好)。
 as small as possible.
-<sup>[[link](#refs-small-transactions)]</sup>
+<sup>[[链接](#refs-small-transactions)]</sup>
 
 * <a name="refs-avoid-short-long-transactions-with-same-ref"></a>
-  Avoid having both short- and long-running transactions interacting
-  with the same Ref.
-<sup>[[link](#refs-avoid-short-long-transactions-with-same-ref)]</sup>
+  避免出现短期事务和长期事务访问同一个引用（Ref）的情形。
+<sup>[[链接](#refs-avoid-short-long-transactions-with-same-ref)]</sup>
 
-### Agents
+    
+
+### 代理（Agents）
 
 * <a name="agents-send"></a>
-  Use `send` only for actions that are CPU bound and don't block on I/O
-  or other threads.
-<sup>[[link](#agents-send)]</sup>
+  `send` 仅使用于计算密集型、不会因IO等因素阻塞的线程。
+<sup>[[链接](#agents-send)]</sup>
 
 * <a name="agents-send-off"></a>
-  Use `send-off` for actions that might block, sleep, or otherwise tie
-  up the thread.
-<sup>[[link](#agents-send-off)]</sup>
+   `send-off` 则用于会阻塞、休眠的线程。
+<sup>[[链接](#agents-send-off)]</sup>
 
-### Atoms
+### 原子（Atoms）
 
 * <a name="atoms-no-update-within-transactions"></a>
-  Avoid atom updates inside STM transactions.
-<sup>[[link](#atoms-no-update-within-transactions)]</sup>
+  避免在事务中更新原子。
+<sup>[[链接](#atoms-no-update-within-transactions)]</sup>
 
 * <a name="atoms-prefer-swap-over-reset"></a>
-  Try to use `swap!` rather than `reset!`, where possible.
-<sup>[[link](#atoms-prefer-swap-over-reset)]</sup>
+  尽量使用 `swap!` ，而不是 `reset!`。
+<sup>[[链接](#atoms-prefer-swap-over-reset)]</sup>
 
     ```Clojure
     (def a (atom 0))
 
-    ;; good
+    ;; 很好
     (swap! a + 5)
 
-    ;; not as good
+    ;; 不够好
     (reset! a 5)
     ```
-
-## Strings
+    
+    
+## 字符串
 
 * <a name="prefer-clojure-string-over-interop"></a>
-  Prefer string manipulation functions from `clojure.string` over Java interop or rolling your own.
-<sup>[[link](#prefer-clojure-string-over-interop)]</sup>
+  优先使用 `clojure.string` 中提供的字符串操作函数，而不是Java中提供的或是自己编写的函数。
+<sup>[[链接](#prefer-clojure-string-over-interop)]</sup>
 
     ```Clojure
-    ;; good
+    ;; 很好
     (clojure.string/upper-case "bruce")
 
-    ;; bad
+    ;; 糟糕
     (.toUpperCase "bruce")
     ```
 
-## Exceptions
+## 异常
 
 * <a name="reuse-existing-exception-types"></a>
-  Reuse existing exception types. Idiomatic Clojure code &mdash; when it does
-  throw an exception &mdash; throws an exception of a standard type
-  (e.g. `java.lang.IllegalArgumentException`,
+  复用已有的异常类型，符合语言习惯的 Clojure 代码，当真的抛出异常时，会抛出标准类型的异常
+  (如： `java.lang.IllegalArgumentException`,
   `java.lang.UnsupportedOperationException`,
   `java.lang.IllegalStateException`, `java.io.IOException`).
-<sup>[[link](#reuse-existing-exception-types)]</sup>
+<sup>[[链接](#reuse-existing-exception-types)]</sup>
 
 * <a name="prefer-with-open-over-finally"></a>
-  Favor `with-open` over `finally`.
-<sup>[[link](#prefer-with-open-over-finally)]</sup>
+  优先使用 `with-open` ，而非 `finally`。
+<sup>[[链接](#prefer-with-open-over-finally)]</sup>
 
-## Macros
+
+## 宏
 
 * <a name="dont-write-macro-if-fn-will-do"></a>
-  Don't write a macro if a function will do.
-<sup>[[link](#dont-write-macro-if-fn-will-do)]</sup>
+  如果可以用函数实现相同功能，不要编写一个宏。
+<sup>[[链接](#dont-write-macro-if-fn-will-do)]</sup>
 
 * <a name="write-macro-usage-before-writing-the-macro"></a>
-  Create an example of a macro usage first and the macro afterwards.
-<sup>[[link](#write-macro-usage-before-writing-the-macro)]</sup>
+  首先编写一个宏的用例，尔后再编写宏本身。
+<sup>[[链接](#write-macro-usage-before-writing-the-macro)]</sup>
 
 * <a name="break-complicated-macros"></a>
-  Break complicated macros into smaller functions whenever possible.
-<sup>[[link](#break-complicated-macros)]</sup>
+  尽可能将一个复杂的宏拆解为多个小型的函数。
+<sup>[[链接](#break-complicated-macros)]</sup>
 
 * <a name="macros-as-syntactic-sugar"></a>
-  A macro should usually just provide syntactic sugar and the core of
-  the macro should be a plain function. Doing so will improve
-  composability.
-<sup>[[link](#macros-as-syntactic-sugar)]</sup>
+  宏只应用于简化语法，其核心应该是一个普通的函数。
+<sup>[[链接](#macros-as-syntactic-sugar)]</sup>
 
 * <a name="syntax-quoted-forms"></a>
-  Prefer syntax-quoted forms over building lists manually.
-<sup>[[link](#syntax-quoted-forms)]</sup>
+  使用语法转义（syntax-quote，即反引号），而非手动构造list。
+<sup>[[链接](#syntax-quoted-forms)]</sup>
+
 
 ## Comments
 
-> Good code is its own best documentation. As you're about to add a
-> comment, ask yourself, "How can I improve the code so that this
-> comment isn't needed?" Improve the code and then document it to make
-> it even clearer. <br/>
+> 好的代码本身就是文档。因此在添加注释之前，先想想自己该如何改进代码，让它更容易理解。做到这一点后，再通过注释让代码更清晰。<br/>
 > -- Steve McConnell
 
 * <a name="self-documenting-code"></a>
-  Endeavor to make your code as self-documenting as possible.
-<sup>[[link](#self-documenting-code)]</sup>
+  学会编写容易理解的代码，然后忽略下文的内容。真的！
+<sup>[[链接](#self-documenting-code)]</sup>
 
 * <a name="four-semicolons-for-heading-comments"></a>
-  Write heading comments with at least four semicolons.
-<sup>[[link](#four-semicolons-for-heading-comments)]</sup>
+  对于标题型的注释，使用至少四个分号起始。
+<sup>[[链接](#four-semicolons-for-heading-comments)]</sup>
 
 * <a name="three-semicolons-for-top-level-comments"></a>
-  Write top-level comments with three semicolons.
-<sup>[[link](#three-semicolons-for-top-level-comments)]</sup>
+  对于顶层注释，使用三个分号起始。
+<sup>[[链接](#three-semicolons-for-top-level-comments)]</sup>
 
 * <a name="two-semicolons-for-code-fragment"></a>
-  Write comments on a particular fragment of code before that fragment
-and aligned with it, using two semicolons.
-<sup>[[link](#two-semicolons-for-code-fragment)]</sup>
+  为某段代码添加注释时，使用两个分号起始，且应与该段代码对齐。
+<sup>[[链接](#two-semicolons-for-code-fragment)]</sup>
 
 * <a name="one-semicolon-for-margin-comments"></a>
-  Write margin comments with one semicolon.
-<sup>[[link](#one-semicolon-for-margin-comments)]</sup>
+  对于行尾注释，使用一个分号起始即可。
+<sup>[[链接](#one-semicolon-for-margin-comments)]</sup>
 
 * <a name="semicolon-space"></a>
-  Always have at least one space between the semicolon
-and the text that follows it.
-<sup>[[link](#semicolon-space)]</sup>
-
+  分号后面要有一个空格。
+<sup>[[链接](#semicolon-space)]</sup>
+ 
     ```Clojure
     ;;;; Frob Grovel
 
-    ;;; This section of code has some important implications:
+    ;;; 这段代码有以下前提:
     ;;;   1. Foo.
     ;;;   2. Bar.
     ;;;   3. Baz.
@@ -1509,85 +1459,77 @@ and the text that follows it.
             mumble             ; Zibblefrotz.
             frotz))
     ```
-
-* <a name="english-syntax"></a>
-  Comments longer than a word begin with a capital letter and use
-  punctuation. Separate sentences with
+   
+ * <a name="english-syntax"></a>
+  对于完整的句子的注释，句首字母应该大写，句与句之间用一个空格分隔。
   [one space](http://en.wikipedia.org/wiki/Sentence_spacing).
-<sup>[[link](#english-syntax)]</sup>
+<sup>[[链接](#english-syntax)]</sup>
 
 * <a name="no-superfluous-comments"></a>
-  Avoid superfluous comments.
-<sup>[[link](#no-superfluous-comments)]</sup>
+  避免冗余的注释。
+<sup>[[链接](#no-superfluous-comments)]</sup>
 
     ```Clojure
-    ;; bad
+    ;; 糟糕
     (inc counter) ; increments counter by one
     ```
-
+   
 * <a name="comment-upkeep"></a>
-  Keep existing comments up-to-date. An outdated comment is worse than no comment
+  注释要和代码同步更新。过期的注释还不如没有注释。
 at all.
-<sup>[[link](#comment-upkeep)]</sup>
+<sup>[[链接](#comment-upkeep)]</sup>
 
 * <a name="dash-underscore-reader-macro"></a>
-  Prefer the use of the `#_` reader macro over a regular comment when
-you need to comment out a particular form.
-<sup>[[link](#dash-underscore-reader-macro)]</sup>
+  有时，使用 `#_`  宏要优于普通的注释
+<sup>[[链接](#dash-underscore-reader-macro)]</sup>
+
 
     ```Clojure
-    ;; good
+    ;; 很好
     (+ foo #_(bar x) delta)
 
-    ;; bad
+    ;; 糟糕
     (+ foo
        ;; (bar x)
        delta)
     ```
 
-> Good code is like a good joke - it needs no explanation. <br/>
+> 好的代码和好的笑话一样，不需要额外的解释。 <br/>
 > -- Russ Olsen
 
 * <a name="refactor-dont-comment"></a>
-  Avoid writing comments to explain bad code. Refactor the code to
-  make it self-explanatory. ("Do, or do not. There is no try." --Yoda)
-<sup>[[link](#refactor-dont-comment)]</sup>
+  避免使用注释去描述一段写得很糟糕的代码。重构它，让它更为可读。（做或者不做，没有尝试这一说。--Yoda）
+<sup>[[链接](#refactor-dont-comment)]</sup>
 
-### Comment Annotations
+### 注释中的标识
 
 * <a name="annotate-above"></a>
-  Annotations should usually be written on the line immediately above
-  the relevant code.
-<sup>[[link](#annotate-above)]</sup>
+  标识应该写在对应代码的上一行。
+<sup>[[链接](#annotate-above)]</sup>
 
 * <a name="annotate-keywords"></a>
-  The annotation keyword is followed by a colon and a space, then a note
-  describing the problem.
-<sup>[[link](#annotate-keywords)]</sup>
+  标识后面是一个冒号和一个空格，以及一段描述文字。
+<sup>[[链接](#annotate-keywords)]</sup>
 
 * <a name="indent-annotations"></a>
-  If multiple lines are required to describe the problem, subsequent
-  lines should be indented as much as the first one.
-<sup>[[link](#indent-annotations)]</sup>
+  如果标识的描述文字超过一行，则第二行需要进行缩进。
+<sup>[[链接](#indent-annotations)]</sup>
 
 * <a name="sing-and-date-annotations"></a>
-  Tag the annotation with your initials and a date so its relevance can
-  be easily verified.
-<sup>[[link](#sing-and-date-annotations)]</sup>
+  将自己姓名的首字母以及当前日期附加到标识描述文字中
+<sup>[[链接](#sing-and-date-annotations)]</sup>
 
     ```Clojure
     (defn some-fun
       []
-      ;; FIXME: This has crashed occasionally since v1.2.3. It may
-      ;;        be related to the BarBazUtil upgrade. (xz 13-1-31)
+      ;; FIXME: 这段代码在v1.2.3之后偶尔会崩溃。
+      ;;        这可能和升级BarBazUtil有关。（xz 13-1-31）
       (baz))
     ```
 
 * <a name="rare-eol-annotations"></a>
-  In cases where the problem is so obvious that any documentation would
-  be redundant, annotations may be left at the end of the offending line
-  with no note. This usage should be the exception and not the rule.
-<sup>[[link](#rare-eol-annotations)]</sup>
+  对于功能非常明显，实在无需添加注释的情况，可以在行尾添加一个标识。
+<sup>[[链接](#rare-eol-annotations)]</sup>
 
     ```Clojure
     (defn bar
@@ -1596,91 +1538,89 @@ you need to comment out a particular form.
     ```
 
 * <a name="todo"></a>
-  Use `TODO` to note missing features or functionality that should be
-  added at a later date.
-<sup>[[link](#todo)]</sup>
+  使用 `TODO` 来表示需要后期添加的功能或特性。
+<sup>[[链接](#todo)]</sup>
 
 * <a name="fixme"></a>
-  Use `FIXME` to note broken code that needs to be fixed.
-<sup>[[link](#fixme)]</sup>
+   使用 `FIXME` 来表示需要修复的问题。
+<sup>[[链接](#fixme)]</sup>
 
 * <a name="optimize"></a>
-  Use `OPTIMIZE` to note slow or inefficient code that may cause
-  performance problems.
-<sup>[[link](#optimize)]</sup>
+  使用 `OPTIMIZE` 来表示会引起性能问题的代码，并需要修复。
+<sup>[[链接](#optimize)]</sup>
 
 * <a name="hack"></a>
-  Use `HACK` to note "code smells" where questionable coding practices
-  were used and should be refactored away.
-<sup>[[link](#hack)]</sup>
+  使用 `HACK` 来表示这段代码并不正规，需要在后期进行重构。
+<sup>[[链接](#hack)]</sup>
 
 * <a name="review"></a>
-  Use `REVIEW` to note anything that should be looked at to confirm it
-  is working as intended. For example: `REVIEW: Are we sure this is how the
-  client does X currently?`
-<sup>[[link](#review)]</sup>
+  使用 `REVIEW` 来表示需要进一步审查这段代码，如：`REVIEW: 你确定客户会正确地操作X吗？`
+<sup>[[链接](#review)]</sup>
 
 * <a name="document-annotations"></a>
-  Use other custom annotation keywords if it feels appropriate, but be
-  sure to document them in your project's `README` or similar.
-<sup>[[link](#document-annotations)]</sup>
+  可以使用其它你认为合适的标识关键字，但记得一定要在项目的 `README` 文件中描述这些自定义的标识。
+<sup>[[链接](#document-annotations)]</sup>
 
-## Existential
+    
+## 惯用法
 
 * <a name="be-functional"></a>
-  Code in a functional way, using mutation only when it makes sense.
-<sup>[[link](#be-functional)]</sup>
+  使用函数式风格进行编程，避免改变变量的值。
+<sup>[[链接](#be-functional)]</sup>
 
 * <a name="be-consistent"></a>
-  Be consistent. In an ideal world, be consistent with these guidelines.
-<sup>[[link](#be-consistent)]</sup>
+  保持编码风格。
+<sup>[[链接](#be-consistent)]</sup>
 
 * <a name="common-sense"></a>
-  Use common sense.
-<sup>[[link](#common-sense)]</sup>
+  用正常人的思维来思考。
+<sup>[[链接](#common-sense)]</sup> 
+    
+    
+ ## 工具
 
-## Tooling
+这里有一些由Clojure的社区创建的工具，可能会帮助你
+在你努力写出地道的Clojure代码。
 
-There are some tools created by the Clojure community that might aid you
-in your endeavor to write idiomatic Clojure code.
+* [Slamhound](https://github.com/technomancy/slamhound)是一种能自动从你的现有的代码生成合适的 `ns` 声明。
+* [kibit](https://github.com/jonase/kibit) 是一个用于Clojure的静态代码分析器。
+  [core.logic](https://github.com/clojure/core.logic) 为代码搜索可能存在一个更惯用模式函数或宏。   
+    
 
-* [Slamhound](https://github.com/technomancy/slamhound) is a tool that
-will automatically generate proper `ns` declarations from your
-existing code.
-* [kibit](https://github.com/jonase/kibit) is a static code analyzer
-  for Clojure which uses
-  [core.logic](https://github.com/clojure/core.logic) to search for
-  patterns of code for which there might exist a more idiomatic
-  function or macro.
 
-# Contributing
+# 贡献
 
-Nothing written in this guide is set in stone. It's my desire to work
-together with everyone interested in Clojure coding style, so that we could
-ultimately create a resource that will be beneficial to the entire Clojure
-community.
+本文中的所有内容都还没有最后定型，我很希望能够和所有对Clojure代码规范感兴趣的同仁一起编写此文，从而形成一份对社区有益的文档。
 
-Feel free to open tickets or send pull requests with improvements. Thanks in
-advance for your help!
+你可以随时创建讨论话题，或发送合并申请。我在这里提前表示感谢。
 
 You can also support the style guide with financial
 contributions via [gittip](https://www.gittip.com/bbatsov).
 
 [![Support via Gittip](https://rawgithub.com/twolfson/gittip-badge/0.2.0/dist/gittip.png)](https://www.gittip.com/bbatsov)
+    
+    
+# 证书
 
-# License
+![创作共用许可](http://i.creativecommons.org/l/by/3.0/88x31.png)
+这项工作是根据
+[知识共享署名3.0 本地化许可协议 ](http://creativecommons.org/licenses/by/3.0/deed.en_US)许可。
 
-![Creative Commons License](http://i.creativecommons.org/l/by/3.0/88x31.png)
-This work is licensed under a
-[Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/deed.en_US)
+# 口耳相传
 
-# Spread the Word
-
-A community-driven style guide is of little use to a community that
-doesn't know about its existence. Tweet about the guide, share it with
-your friends and colleagues. Every comment, suggestion or opinion we
-get makes the guide just a little bit better. And we want to have the
-best possible guide, don't we?
+一份社群策动的风格指南，对一个社群来说，只是让人知道有这个社群。微博转发这份指南，分享给你的朋友或同事。我们得到的每个注解、建议或意见都可以让这份指南变得更好一点。而我们想要拥有的是最好的指南，不是吗？
 
 Cheers,<br/>
 [Bozhidar](https://twitter.com/bbatsov)
+    
+
+
+
+
+
+
+# 宣传
+
+一份由社区驱动的代码规范如果得不到社区本身的支持和认同，那它就毫无意义了。发送一条推特，向朋友和同事介绍此文。任何评论、建议、以及意见都能够让我们向前迈进一小步。请让我们共同努力吧！
+
+
