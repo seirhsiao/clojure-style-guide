@@ -180,13 +180,13 @@
 <sup>[[链接](#docstring-after-fn-name)]</sup>
 
   ```Clojure
-    ;; 好
+    ;; 很好
     (defn foo
       "docstring"
       [x]
       (bar x))
 
-    ;; 差
+    ;; 糟糕
     (defn foo [x]
       "docstring"
       (bar x))
